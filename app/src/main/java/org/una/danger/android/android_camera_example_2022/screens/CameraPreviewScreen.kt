@@ -17,8 +17,8 @@ import org.una.danger.android.android_camera_example_2022.usecases.cameraUseCase
 
 @Composable
 fun CameraPreviewScreen() {
-    CameraPreview {
-        // TODO
+    CameraPreview { imageProxy ->
+        // TODO: ImageProxy
     }
 }
 
