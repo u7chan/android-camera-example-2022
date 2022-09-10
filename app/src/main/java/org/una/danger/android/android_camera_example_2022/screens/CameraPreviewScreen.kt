@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import org.una.danger.android.android_camera_example_2022.usecases.bindCameraUseCases
+import org.una.danger.android.android_camera_example_2022.usecases.cameraUseCase
 
 @Composable
 fun CameraPreviewScreen() {
@@ -43,7 +43,7 @@ fun CameraPreview(analyzer: ImageAnalysis.Analyzer) {
                 val executor = ContextCompat.getMainExecutor(ctx)
                 cameraProviderFuture.addListener(
                     {
-                        bindCameraUseCases(
+                        cameraUseCase(
                             maxWidth,
                             maxHeight,
                             cameraProviderFuture,

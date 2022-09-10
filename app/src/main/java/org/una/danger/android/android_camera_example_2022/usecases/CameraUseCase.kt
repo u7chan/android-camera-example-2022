@@ -14,7 +14,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.Executor
 import kotlin.math.abs
 
-fun bindCameraUseCases(
+fun cameraUseCase(
     maxWidth: Dp,
     maxHeight: Dp,
     cameraProviderFuture: ListenableFuture<ProcessCameraProvider>,
