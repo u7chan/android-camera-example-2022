@@ -14,7 +14,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.Executor
 import kotlin.math.abs
 
-fun cameraUseCase(
+fun useCamera(): (
     maxWidth: Dp,
     maxHeight: Dp,
     cameraProviderFuture: ListenableFuture<ProcessCameraProvider>,
@@ -22,30 +22,32 @@ fun cameraUseCase(
     executor: Executor,
     analyzer: ImageAnalysis.Analyzer,
     lifecycleOwner: LifecycleOwner,
-) {
-    val screenAspectRatio = aspectRatio(width = maxWidth, height = maxHeight)
-    val cameraProvider = cameraProviderFuture.get()
-    val preview = Preview.Builder()
-        .setTargetAspectRatio(screenAspectRatio)
-        .build()
-    val imageAnalysis = ImageAnalysis.Builder()
-        .setTargetAspectRatio(screenAspectRatio)
-        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-        .build().apply {
-            setAnalyzer(executor, analyzer)
-        }
-    val cameraSelector = CameraSelector.Builder()
-        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-        .build()
+) -> Unit {
+    return { maxWidth, maxHeight, cameraProviderFuture, previewView, executor, analyzer, lifecycleOwner ->
+        val screenAspectRatio = aspectRatio(width = maxWidth, height = maxHeight)
+        val cameraProvider = cameraProviderFuture.get()
+        val preview = Preview.Builder()
+            .setTargetAspectRatio(screenAspectRatio)
+            .build()
+        val imageAnalysis = ImageAnalysis.Builder()
+            .setTargetAspectRatio(screenAspectRatio)
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build().apply {
+                setAnalyzer(executor, analyzer)
+            }
+        val cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+            .build()
 
-    cameraProvider.unbindAll()
-    cameraProvider.bindToLifecycle(
-        lifecycleOwner,
-        cameraSelector,
-        preview,
-        imageAnalysis
-    )
-    preview.setSurfaceProvider(previewView.surfaceProvider)
+        cameraProvider.unbindAll()
+        cameraProvider.bindToLifecycle(
+            lifecycleOwner,
+            cameraSelector,
+            preview,
+            imageAnalysis
+        )
+        preview.setSurfaceProvider(previewView.surfaceProvider)
+    }
 }
 
 private fun aspectRatio(width: Dp, height: Dp): Int {

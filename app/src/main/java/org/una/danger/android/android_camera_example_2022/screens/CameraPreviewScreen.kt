@@ -13,12 +13,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import org.una.danger.android.android_camera_example_2022.usecases.cameraUseCase
+import org.una.danger.android.android_camera_example_2022.usecases.useCamera
 
 @Composable
 fun CameraPreviewScreen() {
     CameraPreview { imageProxy ->
         // TODO: ImageProxy
+        print(imageProxy)
     }
 }
 
@@ -27,7 +28,7 @@ fun CameraPreview(analyzer: ImageAnalysis.Analyzer) {
     val context = LocalContext.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val lifecycleOwner = LocalLifecycleOwner.current
-
+    val camera = useCamera()
     BoxWithConstraints {
         AndroidView(
             factory = { ctx ->
@@ -43,7 +44,7 @@ fun CameraPreview(analyzer: ImageAnalysis.Analyzer) {
                 val executor = ContextCompat.getMainExecutor(ctx)
                 cameraProviderFuture.addListener(
                     {
-                        cameraUseCase(
+                        camera(
                             maxWidth,
                             maxHeight,
                             cameraProviderFuture,
