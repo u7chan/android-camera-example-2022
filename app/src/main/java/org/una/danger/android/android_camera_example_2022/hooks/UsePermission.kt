@@ -11,12 +11,13 @@ import androidx.core.content.ContextCompat
 
 @Composable
 fun UsePermission(onGranted: (Boolean) -> Unit) {
+    val context = LocalContext.current
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             onGranted(granted)
         }
     val checkSelfPermission = ContextCompat.checkSelfPermission(
-        LocalContext.current,
+        context,
         Manifest.permission.CAMERA
     ) == PackageManager.PERMISSION_GRANTED
     if (checkSelfPermission) {
