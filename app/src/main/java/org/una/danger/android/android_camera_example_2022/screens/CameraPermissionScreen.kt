@@ -9,17 +9,17 @@ import androidx.compose.runtime.setValue
 import org.una.danger.android.android_camera_example_2022.hooks.UsePermission
 
 @Composable
-fun CameraPermissionScreen() {
+fun CameraPermissionScreen(content: @Composable () -> Unit) {
     var isGranted by remember { mutableStateOf<Boolean?>(null) }
     UsePermission { granted ->
         isGranted = granted
     }
-    val granted = isGranted ?: run {
+    val permissionGranted = isGranted ?: run {
         Text(text = "パーミッションを確認中...")
         return
     }
-    if (granted) {
-        Text(text = "権限OK")
+    if (permissionGranted) {
+        content()
     } else {
         Text(text = "権限NG")
     }
