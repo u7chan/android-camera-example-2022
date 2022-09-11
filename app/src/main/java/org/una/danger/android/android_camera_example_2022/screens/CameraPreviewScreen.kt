@@ -57,7 +57,7 @@ fun CameraPreviewScreen() {
             }
         }
         // Overlay
-        faceDetectResult?.also {
+        faceDetectResult?.also { safeFaceDetectResult ->
             Box(
                 modifier = Modifier
                     .wrapContentSize()
@@ -65,7 +65,7 @@ fun CameraPreviewScreen() {
                     .background(Color.Red),
                 contentAlignment = Alignment.Center
             ) {
-                it.bitmap?.also { safeBitmap ->
+                safeFaceDetectResult.bitmap?.also { safeBitmap ->
                     Image(
                         bitmap = safeBitmap.asImageBitmap(),
                         contentDescription = "",
