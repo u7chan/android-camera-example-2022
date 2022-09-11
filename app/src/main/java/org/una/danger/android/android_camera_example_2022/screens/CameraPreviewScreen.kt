@@ -13,13 +13,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import org.una.danger.android.android_camera_example_2022.extensions.safeImage
+import org.una.danger.android.android_camera_example_2022.hooks.useFaceAnalyzer
 import org.una.danger.android.android_camera_example_2022.usecases.useCamera
+
 
 @Composable
 fun CameraPreviewScreen() {
+    val faceAnalyzer = useFaceAnalyzer()
     CameraPreview { imageProxy ->
-        // TODO: ImageProxy
-        print(imageProxy)
+        imageProxy.safeImage { image ->
+            faceAnalyzer(image, imageProxy.imageInfo) {
+                image.close()
+                imageProxy.close()
+            }
+        }
     }
 }
 
