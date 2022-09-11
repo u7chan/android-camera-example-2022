@@ -30,10 +30,11 @@ import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.face.Face
 import org.una.danger.android.android_camera_example_2022.extensions.safeImage
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceAnalyzer
+import org.una.danger.android.android_camera_example_2022.hooks.useFaceOverlayDraw
 import org.una.danger.android.android_camera_example_2022.lib.BitmapUtils
 import org.una.danger.android.android_camera_example_2022.usecases.useCamera
 
-data class FaceDetectResult(
+private data class FaceDetectResult(
     val bitmap: Bitmap?,
     val faces: List<Face>
 )
@@ -43,6 +44,7 @@ data class FaceDetectResult(
 fun CameraPreviewScreen() {
     var faceDetectResult: FaceDetectResult? by remember { mutableStateOf(null) }
     val faceAnalyzer = useFaceAnalyzer()
+    val faceOverlayDraw = useFaceOverlayDraw()
     Box {
         CameraPreview { imageProxy ->
             imageProxy.safeImage { image ->
@@ -62,13 +64,16 @@ fun CameraPreviewScreen() {
                 modifier = Modifier
                     .wrapContentSize()
                     .size(100.dp, 140.dp)
-                    .background(Color.Red),
+                    .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
                 safeFaceDetectResult.bitmap?.also { safeBitmap ->
                     Image(
-                        bitmap = safeBitmap.asImageBitmap(),
-                        contentDescription = "",
+                        bitmap = faceOverlayDraw(
+                            safeBitmap,
+                            safeFaceDetectResult.faces
+                        ).asImageBitmap(),
+                        contentDescription = "debug-face-image",
                     )
                 }
             }
