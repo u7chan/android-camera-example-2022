@@ -3,28 +3,26 @@ package org.una.danger.android.android_camera_example_2022.hooks
 import android.media.Image
 import androidx.camera.core.ImageInfo
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
-fun useFaceAnalyzer(): (image: Image, imageInfo: ImageInfo, onComplete: () -> Unit) -> Unit {
+fun useFaceAnalyzer(): (image: Image, imageInfo: ImageInfo, onComplete: (List<Face>) -> Unit) -> Unit {
     val detector = FaceDetection.getClient(
         createFaceDetectorOptions(FaceDetectorOption.HighAccuracy)
     )
     return { image, imageInfo, onComplete ->
         val inputImage = InputImage.fromMediaImage(image, imageInfo.rotationDegrees)
+        var detectedFaces: List<Face> = emptyList()
         detector.process(inputImage)
             .addOnSuccessListener { faces ->
-                println("### Detector: ${faces.size}")
-                for (face in faces) {
-                    val bounds = face.boundingBox
-                    println("### Face: $bounds")
-                }
+                detectedFaces = faces
             }
             .addOnFailureListener {
                 // TODO
             }
             .addOnCompleteListener {
-                onComplete()
+                onComplete(detectedFaces)
             }
     }
 }

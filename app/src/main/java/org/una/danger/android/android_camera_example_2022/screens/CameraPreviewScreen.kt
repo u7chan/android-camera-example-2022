@@ -1,31 +1,76 @@
 package org.una.danger.android.android_camera_example_2022.screens
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.view.ViewGroup
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.face.Face
 import org.una.danger.android.android_camera_example_2022.extensions.safeImage
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceAnalyzer
+import org.una.danger.android.android_camera_example_2022.lib.BitmapUtils
 import org.una.danger.android.android_camera_example_2022.usecases.useCamera
 
+data class FaceDetectResult(
+    val bitmap: Bitmap?,
+    val faces: List<Face>
+)
 
+@SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun CameraPreviewScreen() {
+    var faceDetectResult: FaceDetectResult? by remember { mutableStateOf(null) }
     val faceAnalyzer = useFaceAnalyzer()
-    CameraPreview { imageProxy ->
-        imageProxy.safeImage { image ->
-            faceAnalyzer(image, imageProxy.imageInfo) {
-                image.close()
-                imageProxy.close()
+    Box {
+        CameraPreview { imageProxy ->
+            imageProxy.safeImage { image ->
+                faceAnalyzer(image, imageProxy.imageInfo) { faces ->
+                    faceDetectResult = FaceDetectResult(
+                        if (faces.isNotEmpty()) BitmapUtils.getBitmap(imageProxy) else null,
+                        faces
+                    )
+                    image.close()
+                    imageProxy.close()
+                }
+            }
+        }
+        // Overlay
+        faceDetectResult?.also {
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .size(100.dp, 140.dp)
+                    .background(Color.Red),
+                contentAlignment = Alignment.Center
+            ) {
+                it.bitmap?.also { safeBitmap ->
+                    Image(
+                        bitmap = safeBitmap.asImageBitmap(),
+                        contentDescription = "",
+                    )
+                }
             }
         }
     }
