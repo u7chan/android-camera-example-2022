@@ -1,6 +1,5 @@
 package org.una.danger.android.android_camera_example_2022.screens
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.view.ViewGroup
 import androidx.camera.core.ImageAnalysis
@@ -39,7 +38,6 @@ private data class FaceDetectResult(
     val faces: List<Face>
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun CameraPreviewScreen() {
     var faceDetectResult: FaceDetectResult? by remember { mutableStateOf(null) }
@@ -50,7 +48,7 @@ fun CameraPreviewScreen() {
             imageProxy.safeImage { image ->
                 faceAnalyzer(image, imageProxy.imageInfo) { faces ->
                     faceDetectResult = FaceDetectResult(
-                        if (faces.isNotEmpty()) BitmapUtils.getBitmap(imageProxy) else null,
+                        BitmapUtils.getBitmap(imageProxy),
                         faces
                     )
                     image.close()
