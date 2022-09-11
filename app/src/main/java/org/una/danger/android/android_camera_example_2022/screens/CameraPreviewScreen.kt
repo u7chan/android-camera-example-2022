@@ -28,9 +28,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.face.Face
 import org.una.danger.android.android_camera_example_2022.extensions.safeImage
+import org.una.danger.android.android_camera_example_2022.extensions.toBitmap
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceAnalyzer
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceOverlayDraw
-import org.una.danger.android.android_camera_example_2022.libs.BitmapUtils
 import org.una.danger.android.android_camera_example_2022.usecases.useCamera
 
 private data class FaceDetectResult(
@@ -48,7 +48,7 @@ fun CameraPreviewScreen() {
             imageProxy.safeImage { image ->
                 faceAnalyzer(image, imageProxy.imageInfo) { faces ->
                     faceDetectResult = FaceDetectResult(
-                        BitmapUtils.getBitmap(imageProxy),
+                        imageProxy.toBitmap(),
                         faces
                     )
                     image.close()
