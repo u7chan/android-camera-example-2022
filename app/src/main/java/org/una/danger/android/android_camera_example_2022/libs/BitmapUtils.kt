@@ -1,4 +1,4 @@
-package org.una.danger.android.android_camera_example_2022.lib
+package org.una.danger.android.android_camera_example_2022.libs
 
 import android.content.ContentResolver
 import android.graphics.Bitmap

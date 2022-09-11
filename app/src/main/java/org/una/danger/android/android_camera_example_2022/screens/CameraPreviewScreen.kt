@@ -30,7 +30,7 @@ import com.google.mlkit.vision.face.Face
 import org.una.danger.android.android_camera_example_2022.extensions.safeImage
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceAnalyzer
 import org.una.danger.android.android_camera_example_2022.hooks.useFaceOverlayDraw
-import org.una.danger.android.android_camera_example_2022.lib.BitmapUtils
+import org.una.danger.android.android_camera_example_2022.libs.BitmapUtils
 import org.una.danger.android.android_camera_example_2022.usecases.useCamera
 
 private data class FaceDetectResult(
